@@ -8,7 +8,7 @@ async function handleRequest(request) {
         return new Response('WebSocket endpoint only', { status: 400 })
     }
 
-    const mcServer = 'ws://TrioUniverse.aternos.me'
+    const mcServer = 'ws://TrioUniverse.aternos.me:3512'
 
     const webSocketPair = new WebSocketPair()
     const [client, server] = Object.values(webSocketPair)
