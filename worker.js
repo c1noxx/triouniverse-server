@@ -8,23 +8,27 @@ async function handleRequest(request) {
         return new Response('WebSocket endpoint only', { status: 400 })
     }
 
-    const mcServer = 'ws://TrioUniverse.aternos.me:3512'
+    // Your new Minecraft server info
+    const mcServer = 'ws://rezla-iHUw.aternos.me:18699'
 
+    // Create WebSocket pair for browser
     const webSocketPair = new WebSocketPair()
     const [client, server] = Object.values(webSocketPair)
     server.accept()
     client.accept()
 
+    // Connect to Minecraft server
     const upstream = new WebSocket(mcServer)
     upstream.addEventListener('open', () => {
         server.addEventListener('message', msg => upstream.send(msg.data))
         upstream.addEventListener('message', msg => server.send(msg.data))
     })
 
+    // Handle close events
     upstream.addEventListener('close', () => server.close())
     server.addEventListener('close', () => upstream.close())
 
-    // Free keepalive
+    // ----- FREE KEEPALIVE -----
     setInterval(() => {
         if (upstream.readyState === WebSocket.OPEN) {
             upstream.send(JSON.stringify({ keepalive: true }))
